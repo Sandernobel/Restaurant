@@ -19,6 +19,7 @@ import static android.R.layout.*;
 
 public class MenuActivity extends AppCompatActivity implements MenuRequest.Callback {
 
+    // Initialize listview
     ListView menu_list;
 
     @Override
@@ -26,12 +27,15 @@ public class MenuActivity extends AppCompatActivity implements MenuRequest.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        // Get intent from mainactivity
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
 
+        // Get menu items
         MenuRequest request = new MenuRequest(this);
         request.getItems(this, name);
 
+        // Set listener to listview
         menu_list = findViewById(R.id.menuList);
         onItemClickListener itemClicked = new onItemClickListener();
         menu_list.setOnItemClickListener(itemClicked);
@@ -40,10 +44,11 @@ public class MenuActivity extends AppCompatActivity implements MenuRequest.Callb
     private class onItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Get clicked item
             MenuItem item = (MenuItem) parent.getItemAtPosition(position);
 
+            // Give clicked item to menuitemactivity via intent
             Intent intent = new Intent(MenuActivity.this, MenuItemActivity.class);
-            Log.d("so far", "so good");
             intent.putExtra("item", item);
             startActivity(intent);
         }
@@ -51,15 +56,17 @@ public class MenuActivity extends AppCompatActivity implements MenuRequest.Callb
 
     @Override
     public void gotItems(ArrayList<MenuItem> menuItems) {
-        ListView list = findViewById(R.id.menuList);
 
+        // Set adapter to listview
+        menu_list = findViewById(R.id.menuList);
         MenuAdapter adapter;
         adapter = new MenuAdapter(this, simple_list_item_1, menuItems);
-        list.setAdapter(adapter);
+        menu_list.setAdapter(adapter);
     }
 
     @Override
     public void gotItemsError(String message) {
+        // If items not found, display error message
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

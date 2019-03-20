@@ -15,18 +15,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CategoriesRequest implements Response.Listener<JSONObject>, Response.ErrorListener {
+
     public interface Callback {
+        // Initialize callback methods
         void gotCategories(ArrayList<String> categories);
         void gotCategoriesError(String message);
     }
 
+    // Initialize context and callback vars
     public Context context;
     private Callback cats;
 
+    // constructor
     public CategoriesRequest(Context context) {
         this.context = context;
     }
 
+    // Get categories from API
     public void getCategories(Callback activity) {
         cats = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -43,17 +48,21 @@ public class CategoriesRequest implements Response.Listener<JSONObject>, Respons
 
     @Override
     public void onResponse(JSONObject response) {
+        // Initialize arraylist
         ArrayList<String> categories = new ArrayList<String>();
+
+        // Loop over JSONArray and add each category to arraylist
         try {
             JSONArray cats = response.getJSONArray("categories");
             for (int position = 0; position < cats.length(); position ++) {
                 categories.add(cats.getString(position));
             }
         }
+        // Listen for errors
         catch (JSONException error) {
             error.printStackTrace();
         }
-
+        // call gotCategories
         cats.gotCategories(categories);
     }
 }

@@ -17,18 +17,20 @@ public class MenuItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_item);
 
+        // Get intent from menuactivity
         Intent intent = getIntent();
         MenuItem item = (MenuItem) intent.getSerializableExtra("item");
 
+        // Get layout attributes
         ImageView food = findViewById(R.id.foodImage);
         TextView name = findViewById(R.id.foodName);
         TextView price = findViewById(R.id.foodPrice);
         TextView description = findViewById(R.id.description);
 
+        // Set attribrutes to appropriate item values
         name.setText(item.getName());
         price.setText("€" + item.getPrice());
         description.setText(item.getDescription());
-
         String imageUrl = item.getImageUrl();
         Picasso.with(getApplicationContext()).load(imageUrl).into(food);
     }

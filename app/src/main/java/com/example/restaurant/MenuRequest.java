@@ -16,19 +16,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MenuRequest implements Response.Listener<JSONObject>, Response.ErrorListener{
+    // Callback methods
     public interface Callback {
         void gotItems(ArrayList<MenuItem> menuItems);
         void gotItemsError(String message);
     }
 
+    // Initialise variables
     public Callback items;
     public Context context;
     public String name;
 
+    // Constructor
     public MenuRequest(Context context) {
         this.context = context;
     }
 
+    // // Get items from API
     public void getItems(Callback activity, String name) {
         items = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -37,16 +41,20 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
         queue.add(jsonObjectRequest);
     }
 
+    // Get error message when API doesn't work
     @Override
     public void onErrorResponse(VolleyError error) {
         String err_message = error.getMessage();
         items.gotItemsError(err_message);
     }
 
+    // Get items from API if it works
     @Override
     public void onResponse(JSONObject response) {
-        ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+        // Initialize arraylist
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
         try {
+            // Loop over JSONarray to get values from item
             JSONArray items = response.getJSONArray("items");
             for (int position = 0; position < items.length(); position ++) {
                 JSONObject menu = (JSONObject) items.get(position);
@@ -56,10 +64,12 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
                 String category = menu.getString("category");
                 String price = menu.getString("price");
 
+                // Assign values to menu_item
                 MenuItem menu_item = new MenuItem(name, description, imageUrl, category, price);
                 menuItems.add(menu_item);
             }
         }
+        // Listen for errors
         catch (JSONException error) {
             error.printStackTrace();
         }

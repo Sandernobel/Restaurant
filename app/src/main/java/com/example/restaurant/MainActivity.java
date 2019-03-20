@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CategoriesRequest.Callback {
 
+    // Initialize listview
     ListView list;
 
     @Override
@@ -22,9 +23,11 @@ public class MainActivity extends AppCompatActivity implements CategoriesRequest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Get categoriesrequest
         CategoriesRequest request = new CategoriesRequest(this);
         request.getCategories(this);
 
+        // Set listener to list view
         onItemClickListener itemClicked = new onItemClickListener();
         list = findViewById(R.id.listView);
         list.setOnItemClickListener(itemClicked);
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements CategoriesRequest
     public void gotCategories(ArrayList<String> categories) {
         list = findViewById(R.id.listView);
 
+        // Set adapter to listview if categories is found
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, categories);
 
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements CategoriesRequest
     private class onItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("step", "1");
+            // Get clicked item and give it to next activity
             Intent intent = new Intent(MainActivity.this, MenuActivity.class);
             String name = (String) parent.getItemAtPosition(position);
             intent.putExtra("name", name);
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements CategoriesRequest
 
     @Override
     public void gotCategoriesError(String message) {
+        // If gotcategories failed, display error message
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }
