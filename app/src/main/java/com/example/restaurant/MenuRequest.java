@@ -1,7 +1,6 @@
 package com.example.restaurant;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
